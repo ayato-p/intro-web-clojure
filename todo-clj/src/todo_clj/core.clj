@@ -9,5 +9,15 @@
    :body "Hello, world"})
 
 (defn start-server []
-  (if-not @server
+  (when-not @server
     (reset! server (server/run-jetty handler {:port 3000 :join? false}))))
+
+(defn stop-server []
+  (when @server
+    (.stop @server)
+    (reset! server nil)))
+
+(defn restart-server []
+  (when @server
+    (stop-server)
+    (start-server)))
