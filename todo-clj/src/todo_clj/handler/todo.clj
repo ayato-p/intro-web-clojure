@@ -10,8 +10,17 @@
         res/response
         res/html)))
 
-(defn todo-new [req] "TODO new")
-(defn todo-new-post [req] "TODO new post")
+(defn todo-new [req]
+  (-> (view/todo-new-view req)
+      res/response
+      res/html))
+
+(defn todo-new-post [{:as req :keys [params]}]
+  (when (todo/save-todo (:title params))
+    (-> (view/todo-complete-view req)
+        res/response
+        res/html)))
+
 (defn todo-search [req] "TODO search")
 (defn todo-show [req] "TODO show")
 (defn todo-edit [req] "TODO edit")
