@@ -13,3 +13,6 @@
 
 (defn find-first-todo [id]
   (first (jdbc/query db/db-spec ["select * from todo where id = ?" id])))
+
+(defn delete-todo [id]
+  (jdbc/delete! db/db-spec :todo ["id = ?" id]))

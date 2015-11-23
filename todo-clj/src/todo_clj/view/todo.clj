@@ -4,6 +4,8 @@
 
 (defn todo-index-view [req todo-list]
   (->> [:section.card
+        (when-let [{:keys [msg]} (:flash req)]
+          [:div.alert.alert-success [:strong msg]])
         [:h2 "TODO 一覧"]
         [:ul
          (for [{:keys [title]} todo-list]
@@ -35,4 +37,15 @@
            [:input {:name :title :value (:title todo)
                     :placeholder "TODO を入力してください"}]
            [:button.bg-blue "更新する"])]
+         (layout/common req))))
+
+(defn todo-delete-view [req todo]
+  (let [todo-id (get-in req [:params :todo-id])]
+    (->> [:section.card
+          [:h2 "TODO 削除"]
+          (hf/form-to
+           [:post (str "/todo/" todo-id "/delete")]
+           [:p "次の TODO を本当に削除しますか?"]
+           [:p "*" (:title todo)]
+           [:button.bg-red "削除する"])]
          (layout/common req))))
