@@ -1,6 +1,7 @@
 (ns todo-clj.middleware
   (:require [environ.core :refer [env]]
-            [ring.middleware.defaults :as defaults]))
+            [ring.middleware.defaults :as defaults]
+            [todo-clj.middleware.http-response :as http-response]))
 
 (defn- try-resolve [sym]
   (try
@@ -23,5 +24,6 @@
 
 (defn middleware-set [handler]
   (-> handler
+      http-response/wrap-http-response
       (wrap wrap-dev (:dev env))
       (defaults/wrap-defaults defaults/site-defaults)))
